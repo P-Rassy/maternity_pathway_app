@@ -107,8 +107,8 @@ st.markdown("""
 # URLs — replace with your actual GitHub raw URLs
 # =============================================================================
 
-MODEL_URL     = "https://raw.githubusercontent.com/YOUR_USER/YOUR_REPO/main/calibrated_model.joblib"
-ARTEFACTS_URL = "https://raw.githubusercontent.com/YOUR_USER/YOUR_REPO/main/model_artefacts.json"
+MODEL_URL     = "https://raw.githubusercontent.com/P-Rassy/maternity_pathway_app/main/calibrated_model.joblib"
+ARTEFACTS_URL = "https://raw.githubusercontent.com/P-Rassy/maternity_pathway_app/main/model_artefacts.json"
 
 # =============================================================================
 # LOADERS
