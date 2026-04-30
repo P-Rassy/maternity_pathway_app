@@ -104,11 +104,11 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # =============================================================================
-# DEFAULT URLs — replace with your own after uploading to GitHub
+# URLs — replace with your actual GitHub raw URLs
 # =============================================================================
 
-DEFAULT_MODEL_URL     = "https://raw.githubusercontent.com/YOUR_USER/YOUR_REPO/main/calibrated_model.joblib"
-DEFAULT_ARTEFACTS_URL = "https://raw.githubusercontent.com/YOUR_USER/YOUR_REPO/main/model_artefacts.json"
+MODEL_URL     = "https://raw.githubusercontent.com/YOUR_USER/YOUR_REPO/main/calibrated_model.joblib"
+ARTEFACTS_URL = "https://raw.githubusercontent.com/YOUR_USER/YOUR_REPO/main/model_artefacts.json"
 
 # =============================================================================
 # LOADERS
@@ -278,28 +278,21 @@ def compute_derived(inputs):
 # =============================================================================
 
 with st.sidebar:
-    st.markdown("## ⚙️ Configuration")
+    st.markdown("## 📊 Model Info")
     st.markdown("---")
-    model_url     = st.text_input("Model URL (.joblib)", value=DEFAULT_MODEL_URL)
-    artefacts_url = st.text_input("Artefacts URL (.json)", value=DEFAULT_ARTEFACTS_URL)
-    st.markdown("---")
-
-    if "YOUR_USER" not in artefacts_url:
-        try:
-            art = load_artefacts_from_url(artefacts_url)
-            st.markdown("### 📊 Model Info")
-            st.markdown(f"**Model:** {art['model_name'].replace('_',' ').title()}")
-            st.markdown(f"**ROC-AUC:** {art['metrics']['roc_auc']:.3f}")
-            st.markdown(f"**Recall:** {art['metrics']['recall']:.3f}")
-            st.markdown(f"**Precision:** {art['metrics']['precision']:.3f}")
-            st.markdown(f"**Features:** {len(art['features'])}")
-            st.markdown("---")
-            st.markdown("**Thresholds**")
-            st.markdown(f"🟡 Screening : `{art['thresholds']['screening']:.3f}`")
-            st.markdown(f"🔴 High Risk : `{art['thresholds']['high_risk']:.3f}`")
-        except Exception:
-            pass
-
+    try:
+        _art = load_artefacts_from_url(ARTEFACTS_URL)
+        st.markdown(f"**Model:** {_art['model_name'].replace('_',' ').title()}")
+        st.markdown(f"**ROC-AUC:** {_art['metrics']['roc_auc']:.3f}")
+        st.markdown(f"**Recall:** {_art['metrics']['recall']:.3f}")
+        st.markdown(f"**Precision:** {_art['metrics']['precision']:.3f}")
+        st.markdown(f"**Features:** {len(_art['features'])}")
+        st.markdown("---")
+        st.markdown("**Thresholds**")
+        st.markdown(f"🟡 Screening : `{_art['thresholds']['screening']:.3f}`")
+        st.markdown(f"🔴 High Risk : `{_art['thresholds']['high_risk']:.3f}`")
+    except Exception:
+        st.warning("Model info unavailable")
     st.markdown("---")
     st.markdown(
         "<div style='font-size:0.72rem;color:#A8BFD0;'>For research use only.<br>Not a substitute for clinical judgment.</div>",
@@ -359,19 +352,13 @@ with btn_col:
     predict_clicked = st.button("🔍 Generate Risk Prediction")
 
 if predict_clicked:
-    if "YOUR_USER" in model_url or "YOUR_USER" in artefacts_url:
-        st.markdown("""
-        <div class='warning-box'>
-        ⚠️ Please update the Model URL and Artefacts URL in the sidebar with your GitHub raw URLs.
-        </div>""", unsafe_allow_html=True)
-    else:
-        with st.spinner("Loading model and computing risk..."):
-            try:
-                model     = load_model_from_url(model_url)
-                artefacts = load_artefacts_from_url(artefacts_url)
-            except Exception as e:
-                st.error(f"❌ Failed to load model: {e}")
-                st.stop()
+    with st.spinner("Loading model and computing risk..."):
+        try:
+            model     = load_model_from_url(MODEL_URL)
+            artefacts = load_artefacts_from_url(ARTEFACTS_URL)
+        except Exception as e:
+            st.error(f"❌ Failed to load model: {e}")
+            st.stop()
 
         # Build input row
         derived  = compute_derived(all_inputs)
