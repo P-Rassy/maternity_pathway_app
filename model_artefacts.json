@@ -1,0 +1,52 @@
+{
+  "model_name": "random_forest",
+  "thresholds": {
+    "screening": 0.30155601284336436,
+    "high_risk": 0.45357142857142857
+  },
+  "features": [
+    "age",
+    "age_x_phq2",
+    "any_domain_worsened",
+    "bmi_first_visit",
+    "bmi_x_weight_gain",
+    "has_anomaly",
+    "has_comorbidity",
+    "healthtoday_change",
+    "multiple_gestation__third_trimester",
+    "num_fetuses__third_trimester",
+    "poor_care_perceived",
+    "poor_health_1st",
+    "prev_c_sections__first_visit",
+    "prev_deliveries__first_visit",
+    "prev_pregnancies__first_visit",
+    "wexner_change"
+  ],
+  "metrics": {
+    "roc_auc": 0.8297979797979798,
+    "recall": 0.8181818181818182,
+    "precision": 0.47368421052631576,
+    "f2": 0.7142857142857143,
+    "ap": 0.5395813264508068
+  },
+  "tier_metrics": {
+    "screening": {
+      "recall": 0.8182,
+      "precision": 0.4737,
+      "f1": 0.6,
+      "f2": 0.7143,
+      "alert_rate": 0.3393
+    },
+    "high_risk": {
+      "recall": 0.2273,
+      "precision": 0.8333,
+      "f1": 0.3571,
+      "f2": 0.266,
+      "alert_rate": 0.0536
+    }
+  },
+  "class_balance": {
+    "n_positive": 87,
+    "n_negative": 358
+  }
+}
