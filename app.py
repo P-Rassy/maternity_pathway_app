@@ -107,8 +107,8 @@ st.markdown("""
 # URLs — replace with your actual GitHub raw URLs
 # =============================================================================
 
-MODEL_URL     = "https://raw.githubusercontent.com/P-Rassy/maternity_pathway_app/main/calibrated_model.joblib"
-ARTEFACTS_URL = "https://raw.githubusercontent.com/P-Rassy/maternity_pathway_app/main/model_artefacts.json"
+MODEL_URL     = "https://raw.githubusercontent.com/YOUR_USER/YOUR_REPO/main/calibrated_model.joblib"
+ARTEFACTS_URL = "https://raw.githubusercontent.com/YOUR_USER/YOUR_REPO/main/model_artefacts.json"
 
 # =============================================================================
 # LOADERS
@@ -211,32 +211,32 @@ RAW_INPUTS = {
     "phq2_total__first_visit": {
         "label": "PHQ-2 Score (1st Visit)", "type": "float",
         "min": 0.0, "max": 6.0, "default": 0.0, "unit": "",
-        "section": "PRO Scores (for derived features)",
+        "section": "Patient-Reported Outcome Scores",
     },
     "weight_gain": {
         "label": "Weight Gain (1st → 3rd Trimester)", "type": "float",
         "min": -5.0, "max": 40.0, "default": 12.0, "unit": "kg",
-        "section": "PRO Scores (for derived features)",
+        "section": "Patient-Reported Outcome Scores",
     },
     "eq5d_3l_healthtoday__first_visit": {
         "label": "Health Today VAS (1st Visit)", "type": "float",
         "min": 0.0, "max": 100.0, "default": 75.0, "unit": "/100",
-        "section": "PRO Scores (for derived features)",
+        "section": "Patient-Reported Outcome Scores",
     },
     "eq5d_3l_healthtoday__third_trimester": {
         "label": "Health Today VAS (3rd Trimester)", "type": "float",
         "min": 0.0, "max": 100.0, "default": 70.0, "unit": "/100",
-        "section": "PRO Scores (for derived features)",
+        "section": "Patient-Reported Outcome Scores",
     },
     "wexner_total__first_visit": {
         "label": "Wexner Score (1st Visit)", "type": "float",
         "min": 0.0, "max": 20.0, "default": 0.0, "unit": "",
-        "section": "PRO Scores (for derived features)",
+        "section": "Patient-Reported Outcome Scores",
     },
     "wexner_total__third_trimester": {
         "label": "Wexner Score (3rd Trimester)", "type": "float",
         "min": 0.0, "max": 20.0, "default": 0.0, "unit": "",
-        "section": "PRO Scores (for derived features)",
+        "section": "Patient-Reported Outcome Scores",
     },
 }
 
@@ -278,22 +278,6 @@ def compute_derived(inputs):
 # =============================================================================
 
 with st.sidebar:
-    st.markdown("## 📊 Model Info")
-    st.markdown("---")
-    try:
-        _art = load_artefacts_from_url(ARTEFACTS_URL)
-        st.markdown(f"**Model:** {_art['model_name'].replace('_',' ').title()}")
-        st.markdown(f"**ROC-AUC:** {_art['metrics']['roc_auc']:.3f}")
-        st.markdown(f"**Recall:** {_art['metrics']['recall']:.3f}")
-        st.markdown(f"**Precision:** {_art['metrics']['precision']:.3f}")
-        st.markdown(f"**Features:** {len(_art['features'])}")
-        st.markdown("---")
-        st.markdown("**Thresholds**")
-        st.markdown(f"🟡 Screening : `{_art['thresholds']['screening']:.3f}`")
-        st.markdown(f"🔴 High Risk : `{_art['thresholds']['high_risk']:.3f}`")
-    except Exception:
-        st.warning("Model info unavailable")
-    st.markdown("---")
     st.markdown(
         "<div style='font-size:0.72rem;color:#A8BFD0;'>For research use only.<br>Not a substitute for clinical judgment.</div>",
         unsafe_allow_html=True,
