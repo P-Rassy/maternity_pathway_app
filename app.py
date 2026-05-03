@@ -23,11 +23,27 @@ st.set_page_config(
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap');
-    html, body, [class*="css"] { font-family: 'DM Sans', sans-serif; }
-    h1, h2, h3 { font-family: 'DM Serif Display', serif; }
-    .stApp { background-color: #F7F4EF; }
-    section[data-testid="stSidebar"] { background-color: #1C2B3A; }
-    section[data-testid="stSidebar"] * { color: white !important; }
+
+    html, body, [class*="css"] {
+        font-family: 'DM Sans', sans-serif;
+    }
+
+    h1, h2, h3 {
+        font-family: 'DM Serif Display', serif;
+    }
+
+    .stApp {
+        background-color: white;
+    }
+
+    section[data-testid="stSidebar"] {
+        background-color: #1C2B3A;
+    }
+
+    section[data-testid="stSidebar"] * {
+        color: white !important;
+    }
+
     section[data-testid="stSidebar"] label {
         color: #A8BFD0 !important;
         font-size: 0.78rem;
@@ -35,28 +51,45 @@ st.markdown("""
         letter-spacing: 0.04em;
         text-transform: uppercase;
     }
+
     .risk-card {
         border-radius: 16px;
         padding: 2rem;
         margin-bottom: 1.5rem;
         border: 1px solid rgba(0,0,0,0.06);
     }
-    .risk-low      { background: linear-gradient(135deg,#E8F5E9,#F1F8E9); border-left:5px solid #4CAF50; }
-    .risk-moderate { background: linear-gradient(135deg,#FFF8E1,#FFF3CD); border-left:5px solid #FF9800; }
-    .risk-high     { background: linear-gradient(135deg,#FFEBEE,#FCE4EC); border-left:5px solid #F44336; }
+
+    .risk-low {
+        background: linear-gradient(135deg,#E8F5E9,#F1F8E9);
+        border-left: 5px solid #4CAF50;
+    }
+
+    .risk-moderate {
+        background: linear-gradient(135deg,#FFF8E1,#FFF3CD);
+        border-left: 5px solid #FF9800;
+    }
+
+    .risk-high {
+        background: linear-gradient(135deg,#FFEBEE,#FCE4EC);
+        border-left: 5px solid #F44336;
+    }
+
     .metric-box {
         background: white;
         border-radius: 12px;
         padding: 1.2rem 1.5rem;
         text-align: center;
         box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        border: 1px solid rgba(0,0,0,0.05);
     }
+
     .metric-box .value {
         font-size: 1.8rem;
         font-weight: 700;
         font-family: 'DM Serif Display', serif;
         color: #1C2B3A;
     }
+
     .metric-box .label {
         font-size: 0.72rem;
         color: #6B7280;
@@ -64,6 +97,7 @@ st.markdown("""
         letter-spacing: 0.05em;
         margin-top: 0.3rem;
     }
+
     .section-header {
         font-family: 'DM Serif Display', serif;
         font-size: 1.05rem;
@@ -73,6 +107,7 @@ st.markdown("""
         margin-bottom: 1rem;
         margin-top: 1.8rem;
     }
+
     .stButton > button {
         background-color: #1C2B3A;
         color: white !important;
@@ -83,27 +118,34 @@ st.markdown("""
         font-size: 0.95rem;
         width: 100%;
     }
-    .stButton > button:hover { background-color: #2C3E50; }
+
+    .stButton > button:hover {
+        background-color: #2C3E50;
+    }
+
     .warning-box {
-        background: #FFF3CD; border: 1px solid #FFD700;
-        border-radius: 10px; padding: 1rem 1.2rem;
-        font-size: 0.85rem; color: #856404;
+        background: #FFF3CD;
+        border: 1px solid #FFD700;
+        border-radius: 10px;
+        padding: 1rem 1.2rem;
+        font-size: 0.85rem;
+        color: #856404;
     }
+
     .info-box {
-        background: #E3F2FD; border: 1px solid #90CAF9;
-        border-radius: 10px; padding: 1rem 1.2rem;
-        font-size: 0.85rem; color: #1565C0; margin-top: 1rem;
+        background: #E3F2FD;
+        border: 1px solid #90CAF9;
+        border-radius: 10px;
+        padding: 1rem 1.2rem;
+        font-size: 0.85rem;
+        color: #1565C0;
+        margin-top: 1rem;
     }
-    .tier-table { width:100%; border-collapse:collapse; font-size:0.85rem; margin-top:0.5rem; }
-    .tier-table th { background:#1C2B3A; color:white; padding:0.5rem 0.8rem; text-align:left; }
-    .tier-table td { padding:0.5rem 0.8rem; border-bottom:1px solid #E5DDD0; }
-    .tier-table tr:nth-child(even) td { background:#F7F4EF; }
 </style>
 """, unsafe_allow_html=True)
 
 # =============================================================================
 # LOCAL FILE PATHS
-# Files must be in the same folder as app.py
 # =============================================================================
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -130,96 +172,156 @@ def load_artefacts_local(path):
 
 DIRECT_FEATURES = {
     "age": {
-        "label": "Maternal Age", "type": "int",
-        "min": 15, "max": 50, "default": 28, "unit": "years",
+        "label": "Maternal Age",
+        "type": "int",
+        "min": 15,
+        "max": 50,
+        "default": 28,
+        "unit": "years",
         "section": "Demographics",
     },
     "bmi_first_visit": {
-        "label": "BMI (1st Visit)", "type": "float",
-        "min": 15.0, "max": 55.0, "default": 23.0, "unit": "kg/m²",
+        "label": "BMI (1st Visit)",
+        "type": "float",
+        "min": 15.0,
+        "max": 55.0,
+        "default": 23.0,
+        "unit": "kg/m²",
         "section": "Anthropometric",
     },
     "prev_pregnancies__first_visit": {
-        "label": "Previous Pregnancies", "type": "int",
-        "min": 0, "max": 12, "default": 0, "unit": "",
+        "label": "Previous Pregnancies",
+        "type": "int",
+        "min": 0,
+        "max": 12,
+        "default": 0,
+        "unit": "",
         "section": "Obstetric History",
     },
     "prev_deliveries__first_visit": {
-        "label": "Previous Deliveries", "type": "int",
-        "min": 0, "max": 12, "default": 0, "unit": "",
+        "label": "Previous Deliveries",
+        "type": "int",
+        "min": 0,
+        "max": 12,
+        "default": 0,
+        "unit": "",
         "section": "Obstetric History",
     },
     "prev_c_sections__first_visit": {
-        "label": "Previous C-Sections", "type": "int",
-        "min": 0, "max": 12, "default": 0, "unit": "",
+        "label": "Previous C-Sections",
+        "type": "int",
+        "min": 0,
+        "max": 12,
+        "default": 0,
+        "unit": "",
         "section": "Obstetric History",
     },
     "multiple_gestation__third_trimester": {
-        "label": "Multiple Gestation", "type": "bool",
-        "default": 0, "unit": "",
+        "label": "Multiple Gestation",
+        "type": "bool",
+        "default": 0,
+        "unit": "",
         "section": "Obstetric History",
     },
     "num_fetuses__third_trimester": {
-        "label": "Number of Fetuses", "type": "int",
-        "min": 1, "max": 5, "default": 1, "unit": "",
+        "label": "Number of Fetuses",
+        "type": "int",
+        "min": 1,
+        "max": 5,
+        "default": 1,
+        "unit": "",
         "section": "Obstetric History",
     },
     "has_comorbidity": {
-        "label": "Has Comorbidity", "type": "bool",
-        "default": 0, "unit": "",
+        "label": "Has Comorbidity",
+        "type": "bool",
+        "default": 0,
+        "unit": "",
         "section": "Clinical Flags",
     },
     "has_anomaly": {
-        "label": "Has Anomaly", "type": "bool",
-        "default": 0, "unit": "",
+        "label": "Has Anomaly",
+        "type": "bool",
+        "default": 0,
+        "unit": "",
         "section": "Clinical Flags",
     },
     "any_domain_worsened": {
-        "label": "Any PROMs Domain Worsened (1st → 3rd)", "type": "bool",
-        "default": 0, "unit": "",
+        "label": "Any PROMs Domain Worsened (1st → 3rd)",
+        "type": "bool",
+        "default": 0,
+        "unit": "",
         "section": "Clinical Flags",
     },
     "poor_care_perceived": {
-        "label": "Poor Perceived Care", "type": "bool",
-        "default": 0, "unit": "",
+        "label": "Poor Perceived Care",
+        "type": "bool",
+        "default": 0,
+        "unit": "",
         "section": "Clinical Flags",
     },
     "poor_health_1st": {
-        "label": "Poor Health at 1st Visit", "type": "bool",
-        "default": 0, "unit": "",
+        "label": "Poor Health at 1st Visit",
+        "type": "bool",
+        "default": 0,
+        "unit": "",
         "section": "Clinical Flags",
     },
 }
 
 RAW_INPUTS = {
     "phq2_total__first_visit": {
-        "label": "PHQ-2 Score (1st Visit)", "type": "float",
-        "min": 0.0, "max": 6.0, "default": 0.0, "unit": "",
+        "label": "PHQ-2 Score (1st Visit)",
+        "type": "float",
+        "min": 0.0,
+        "max": 6.0,
+        "default": 0.0,
+        "unit": "",
         "section": "Patient-Reported Outcome Scores",
     },
     "weight_gain": {
-        "label": "Weight Gain (1st → 3rd Trimester)", "type": "float",
-        "min": -5.0, "max": 40.0, "default": 12.0, "unit": "kg",
+        "label": "Weight Gain (1st → 3rd Trimester)",
+        "type": "float",
+        "min": -5.0,
+        "max": 40.0,
+        "default": 12.0,
+        "unit": "kg",
         "section": "Patient-Reported Outcome Scores",
     },
     "eq5d_3l_healthtoday__first_visit": {
-        "label": "Health Today VAS (1st Visit)", "type": "float",
-        "min": 0.0, "max": 100.0, "default": 75.0, "unit": "/100",
+        "label": "Health Today VAS (1st Visit)",
+        "type": "float",
+        "min": 0.0,
+        "max": 100.0,
+        "default": 75.0,
+        "unit": "/100",
         "section": "Patient-Reported Outcome Scores",
     },
     "eq5d_3l_healthtoday__third_trimester": {
-        "label": "Health Today VAS (3rd Trimester)", "type": "float",
-        "min": 0.0, "max": 100.0, "default": 70.0, "unit": "/100",
+        "label": "Health Today VAS (3rd Trimester)",
+        "type": "float",
+        "min": 0.0,
+        "max": 100.0,
+        "default": 70.0,
+        "unit": "/100",
         "section": "Patient-Reported Outcome Scores",
     },
     "wexner_total__first_visit": {
-        "label": "Wexner Score (1st Visit)", "type": "float",
-        "min": 0.0, "max": 20.0, "default": 0.0, "unit": "",
+        "label": "Wexner Score (1st Visit)",
+        "type": "float",
+        "min": 0.0,
+        "max": 20.0,
+        "default": 0.0,
+        "unit": "",
         "section": "Patient-Reported Outcome Scores",
     },
     "wexner_total__third_trimester": {
-        "label": "Wexner Score (3rd Trimester)", "type": "float",
-        "min": 0.0, "max": 20.0, "default": 0.0, "unit": "",
+        "label": "Wexner Score (3rd Trimester)",
+        "type": "float",
+        "min": 0.0,
+        "max": 20.0,
+        "default": 0.0,
+        "unit": "",
         "section": "Patient-Reported Outcome Scores",
     },
 }
@@ -289,20 +391,6 @@ with st.sidebar:
     )
 
 # =============================================================================
-# HEADER
-# =============================================================================
-
-st.markdown("# 🤱 Maternity Complication Risk Predictor")
-
-st.markdown(
-    "<p style='color:#6B7280;font-size:0.93rem;'>Enter patient data to generate a complication risk estimate. "
-    "The model uses two clinical thresholds: <b>Screening</b> and <b>High Risk</b>.</p>",
-    unsafe_allow_html=True,
-)
-
-st.markdown("---")
-
-# =============================================================================
 # INPUT FORM
 # =============================================================================
 
@@ -314,7 +402,10 @@ for feat, cfg in DIRECT_FEATURES.items():
     direct_sections.setdefault(cfg["section"], {})[feat] = cfg
 
 for section_name, feats in direct_sections.items():
-    st.markdown(f"<div class='section-header'>{section_name}</div>", unsafe_allow_html=True)
+    st.markdown(
+        f"<div class='section-header'>{section_name}</div>",
+        unsafe_allow_html=True
+    )
 
     cols = st.columns(3)
 
@@ -328,7 +419,10 @@ for feat, cfg in RAW_INPUTS.items():
     raw_sections.setdefault(cfg["section"], {})[feat] = cfg
 
 for section_name, feats in raw_sections.items():
-    st.markdown(f"<div class='section-header'>{section_name}</div>", unsafe_allow_html=True)
+    st.markdown(
+        f"<div class='section-header'>{section_name}</div>",
+        unsafe_allow_html=True
+    )
 
     cols = st.columns(3)
 
@@ -378,35 +472,45 @@ if predict_clicked:
             st.error(f"❌ Prediction failed: {e}")
             st.stop()
 
+        # =============================================================================
+        # RISK CLASSIFICATION
+        # =============================================================================
+
         if prob >= thr_h:
             risk_level = "High Risk"
             risk_class = "risk-high"
             risk_icon = "🔴"
-            risk_msg = "Patient exceeds the high-risk threshold. Immediate clinical review is recommended."
+            risk_msg = "High risk — immediate clinical attention recommended."
 
         elif prob >= thr_s:
-            risk_level = "Screening Flag"
+            risk_level = "Moderate Risk"
             risk_class = "risk-moderate"
             risk_icon = "🟡"
-            risk_msg = "Patient exceeds the screening threshold. Closer follow-up and additional assessment are advised."
+            risk_msg = "Moderate risk — closer monitoring advised."
 
         else:
             risk_level = "Low Risk"
             risk_class = "risk-low"
             risk_icon = "🟢"
-            risk_msg = "Patient is below the screening threshold. Continue standard monitoring."
+            risk_msg = "Low risk — continue routine care."
 
-        st.markdown("### 📊 Prediction Results")
+        # =============================================================================
+        # RESULTS DISPLAY
+        # =============================================================================
 
         st.markdown(f"""
         <div class='risk-card {risk_class}'>
             <div style='font-size:1.7rem;font-weight:700;font-family:DM Serif Display,serif;'>
                 {risk_icon} {risk_level}
             </div>
+
             <div style='font-size:2.8rem;font-weight:800;color:#1C2B3A;margin:0.4rem 0;'>
                 {prob:.1%}
             </div>
-            <div style='font-size:0.9rem;color:#4B5563;'>{risk_msg}</div>
+
+            <div style='font-size:0.9rem;color:#4B5563;'>
+                {risk_msg}
+            </div>
         </div>
         """, unsafe_allow_html=True)
 
@@ -414,9 +518,9 @@ if predict_clicked:
 
         for col, val, lbl in [
             (c1, f"{prob:.3f}", "Predicted Probability"),
-            (c2, risk_level, "Risk Tier"),
-            (c3, f"{thr_s:.3f}", "Screening Threshold"),
-            (c4, f"{thr_h:.3f}", "High-Risk Threshold"),
+            (c2, risk_level, "Risk Level"),
+            (c3, f"{thr_s:.3f}", "Moderate Threshold"),
+            (c4, f"{thr_h:.3f}", "High Threshold"),
         ]:
             with col:
                 st.markdown(f"""
@@ -425,45 +529,6 @@ if predict_clicked:
                     <div class='label'>{lbl}</div>
                 </div>
                 """, unsafe_allow_html=True)
-
-        tier_m = artefacts.get("tier_metrics", {})
-
-        if tier_m:
-            st.markdown("<br>", unsafe_allow_html=True)
-            st.markdown("#### Threshold Performance Reference")
-
-            st.markdown(f"""
-            <table class='tier-table'>
-                <thead>
-                    <tr>
-                        <th>Tier</th>
-                        <th>Threshold</th>
-                        <th>Recall</th>
-                        <th>Precision</th>
-                        <th>F2</th>
-                        <th>Alert Rate</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>🟡 Screening</td>
-                        <td>{thr_s:.3f}</td>
-                        <td>{tier_m['screening']['recall']:.3f}</td>
-                        <td>{tier_m['screening']['precision']:.3f}</td>
-                        <td>{tier_m['screening']['f2']:.3f}</td>
-                        <td>{tier_m['screening']['alert_rate']:.1%}</td>
-                    </tr>
-                    <tr>
-                        <td>🔴 High Risk</td>
-                        <td>{thr_h:.3f}</td>
-                        <td>{tier_m['high_risk']['recall']:.3f}</td>
-                        <td>{tier_m['high_risk']['precision']:.3f}</td>
-                        <td>{tier_m['high_risk']['f2']:.3f}</td>
-                        <td>{tier_m['high_risk']['alert_rate']:.1%}</td>
-                    </tr>
-                </tbody>
-            </table>
-            """, unsafe_allow_html=True)
 
         st.markdown("""
         <div class='info-box'>
