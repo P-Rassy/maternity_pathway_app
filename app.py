@@ -74,6 +74,25 @@ st.markdown("""
         border-left: 5px solid #F44336;
     }
 
+    .risk-title {
+        font-size: 1.7rem;
+        font-weight: 700;
+        font-family: 'DM Serif Display', serif;
+        color: #1C2B3A;
+    }
+
+    .risk-probability {
+        font-size: 2.8rem;
+        font-weight: 800;
+        color: #1C2B3A;
+        margin: 0.4rem 0;
+    }
+
+    .risk-message {
+        font-size: 0.9rem;
+        color: #4B5563;
+    }
+
     .metric-box {
         background: white;
         border-radius: 12px;
@@ -98,16 +117,6 @@ st.markdown("""
         margin-top: 0.3rem;
     }
 
-    .section-header {
-        font-family: 'DM Serif Display', serif;
-        font-size: 1.05rem;
-        color: #1C2B3A;
-        border-bottom: 2px solid #E5DDD0;
-        padding-bottom: 0.4rem;
-        margin-bottom: 1rem;
-        margin-top: 1.8rem;
-    }
-
     .stButton > button {
         background-color: #1C2B3A;
         color: white !important;
@@ -121,15 +130,6 @@ st.markdown("""
 
     .stButton > button:hover {
         background-color: #2C3E50;
-    }
-
-    .warning-box {
-        background: #FFF3CD;
-        border: 1px solid #FFD700;
-        border-radius: 10px;
-        padding: 1rem 1.2rem;
-        font-size: 0.85rem;
-        color: #856404;
     }
 
     .info-box {
@@ -177,8 +177,6 @@ DIRECT_FEATURES = {
         "min": 15,
         "max": 50,
         "default": 28,
-        "unit": "years",
-        "section": "Demographics",
     },
     "bmi_first_visit": {
         "label": "BMI (1st Visit)",
@@ -186,8 +184,6 @@ DIRECT_FEATURES = {
         "min": 15.0,
         "max": 55.0,
         "default": 23.0,
-        "unit": "kg/m²",
-        "section": "Anthropometric",
     },
     "prev_pregnancies__first_visit": {
         "label": "Previous Pregnancies",
@@ -195,8 +191,6 @@ DIRECT_FEATURES = {
         "min": 0,
         "max": 12,
         "default": 0,
-        "unit": "",
-        "section": "Obstetric History",
     },
     "prev_deliveries__first_visit": {
         "label": "Previous Deliveries",
@@ -204,8 +198,6 @@ DIRECT_FEATURES = {
         "min": 0,
         "max": 12,
         "default": 0,
-        "unit": "",
-        "section": "Obstetric History",
     },
     "prev_c_sections__first_visit": {
         "label": "Previous C-Sections",
@@ -213,15 +205,11 @@ DIRECT_FEATURES = {
         "min": 0,
         "max": 12,
         "default": 0,
-        "unit": "",
-        "section": "Obstetric History",
     },
     "multiple_gestation__third_trimester": {
         "label": "Multiple Gestation",
         "type": "bool",
         "default": 0,
-        "unit": "",
-        "section": "Obstetric History",
     },
     "num_fetuses__third_trimester": {
         "label": "Number of Fetuses",
@@ -229,43 +217,31 @@ DIRECT_FEATURES = {
         "min": 1,
         "max": 5,
         "default": 1,
-        "unit": "",
-        "section": "Obstetric History",
     },
     "has_comorbidity": {
         "label": "Has Comorbidity",
         "type": "bool",
         "default": 0,
-        "unit": "",
-        "section": "Clinical Flags",
     },
     "has_anomaly": {
         "label": "Has Anomaly",
         "type": "bool",
         "default": 0,
-        "unit": "",
-        "section": "Clinical Flags",
     },
     "any_domain_worsened": {
         "label": "Any PROMs Domain Worsened (1st → 3rd)",
         "type": "bool",
         "default": 0,
-        "unit": "",
-        "section": "Clinical Flags",
     },
     "poor_care_perceived": {
         "label": "Poor Perceived Care",
         "type": "bool",
         "default": 0,
-        "unit": "",
-        "section": "Clinical Flags",
     },
     "poor_health_1st": {
         "label": "Poor Health at 1st Visit",
         "type": "bool",
         "default": 0,
-        "unit": "",
-        "section": "Clinical Flags",
     },
 }
 
@@ -276,8 +252,6 @@ RAW_INPUTS = {
         "min": 0.0,
         "max": 6.0,
         "default": 0.0,
-        "unit": "",
-        "section": "Patient-Reported Outcome Scores",
     },
     "weight_gain": {
         "label": "Weight Gain (1st → 3rd Trimester)",
@@ -285,8 +259,6 @@ RAW_INPUTS = {
         "min": -5.0,
         "max": 40.0,
         "default": 12.0,
-        "unit": "kg",
-        "section": "Patient-Reported Outcome Scores",
     },
     "eq5d_3l_healthtoday__first_visit": {
         "label": "Health Today VAS (1st Visit)",
@@ -294,8 +266,6 @@ RAW_INPUTS = {
         "min": 0.0,
         "max": 100.0,
         "default": 75.0,
-        "unit": "/100",
-        "section": "Patient-Reported Outcome Scores",
     },
     "eq5d_3l_healthtoday__third_trimester": {
         "label": "Health Today VAS (3rd Trimester)",
@@ -303,8 +273,6 @@ RAW_INPUTS = {
         "min": 0.0,
         "max": 100.0,
         "default": 70.0,
-        "unit": "/100",
-        "section": "Patient-Reported Outcome Scores",
     },
     "wexner_total__first_visit": {
         "label": "Wexner Score (1st Visit)",
@@ -312,8 +280,6 @@ RAW_INPUTS = {
         "min": 0.0,
         "max": 20.0,
         "default": 0.0,
-        "unit": "",
-        "section": "Patient-Reported Outcome Scores",
     },
     "wexner_total__third_trimester": {
         "label": "Wexner Score (3rd Trimester)",
@@ -321,8 +287,6 @@ RAW_INPUTS = {
         "min": 0.0,
         "max": 20.0,
         "default": 0.0,
-        "unit": "",
-        "section": "Patient-Reported Outcome Scores",
     },
 }
 
@@ -391,44 +355,33 @@ with st.sidebar:
     )
 
 # =============================================================================
+# HEADER
+# =============================================================================
+
+st.markdown("# 🤱 Maternity Complication Risk Predictor")
+
+st.markdown(
+    "<p style='color:#6B7280;font-size:0.93rem;'>Enter patient data to generate a complication risk estimate.</p>",
+    unsafe_allow_html=True,
+)
+
+st.markdown("---")
+
+# =============================================================================
 # INPUT FORM
 # =============================================================================
 
 all_inputs = {}
 
-direct_sections = {}
+all_features = {**DIRECT_FEATURES, **RAW_INPUTS}
 
-for feat, cfg in DIRECT_FEATURES.items():
-    direct_sections.setdefault(cfg["section"], {})[feat] = cfg
+feature_items = list(all_features.items())
 
-for section_name, feats in direct_sections.items():
-    st.markdown(
-        f"<div class='section-header'>{section_name}</div>",
-        unsafe_allow_html=True
-    )
+cols = st.columns(3)
 
-    cols = st.columns(3)
-
-    for idx, (feat, cfg) in enumerate(feats.items()):
-        with cols[idx % 3]:
-            all_inputs[feat] = render_input(feat, cfg, key=feat)
-
-raw_sections = {}
-
-for feat, cfg in RAW_INPUTS.items():
-    raw_sections.setdefault(cfg["section"], {})[feat] = cfg
-
-for section_name, feats in raw_sections.items():
-    st.markdown(
-        f"<div class='section-header'>{section_name}</div>",
-        unsafe_allow_html=True
-    )
-
-    cols = st.columns(3)
-
-    for idx, (feat, cfg) in enumerate(feats.items()):
-        with cols[idx % 3]:
-            all_inputs[feat] = render_input(feat, cfg, key=feat)
+for idx, (feat, cfg) in enumerate(feature_items):
+    with cols[idx % 3]:
+        all_inputs[feat] = render_input(feat, cfg, key=feat)
 
 # =============================================================================
 # PREDICT BUTTON
@@ -472,10 +425,6 @@ if predict_clicked:
             st.error(f"❌ Prediction failed: {e}")
             st.stop()
 
-        # =============================================================================
-        # RISK CLASSIFICATION
-        # =============================================================================
-
         if prob >= thr_h:
             risk_level = "High Risk"
             risk_class = "risk-high"
@@ -494,46 +443,45 @@ if predict_clicked:
             risk_icon = "🟢"
             risk_msg = "Low risk — continue routine care."
 
-        # =============================================================================
-        # RESULTS DISPLAY
-        # =============================================================================
-
-        st.markdown(f"""
-        <div class='risk-card {risk_class}'>
-            <div style='font-size:1.7rem;font-weight:700;font-family:DM Serif Display,serif;'>
-                {risk_icon} {risk_level}
+        st.markdown(
+            f"""
+            <div class="{risk_class} risk-card">
+                <div class="risk-title">{risk_icon} {risk_level}</div>
+                <div class="risk-probability">{prob:.1%}</div>
+                <div class="risk-message">{risk_msg}</div>
             </div>
-
-            <div style='font-size:2.8rem;font-weight:800;color:#1C2B3A;margin:0.4rem 0;'>
-                {prob:.1%}
-            </div>
-
-            <div style='font-size:0.9rem;color:#4B5563;'>
-                {risk_msg}
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
+            """,
+            unsafe_allow_html=True
+        )
 
         c1, c2, c3, c4 = st.columns(4)
 
-        for col, val, lbl in [
+        metrics = [
             (c1, f"{prob:.3f}", "Predicted Probability"),
             (c2, risk_level, "Risk Level"),
             (c3, f"{thr_s:.3f}", "Moderate Threshold"),
             (c4, f"{thr_h:.3f}", "High Threshold"),
-        ]:
-            with col:
-                st.markdown(f"""
-                <div class='metric-box'>
-                    <div class='value'>{val}</div>
-                    <div class='label'>{lbl}</div>
-                </div>
-                """, unsafe_allow_html=True)
+        ]
 
-        st.markdown("""
-        <div class='info-box'>
-            ℹ️ This prediction is generated by a machine learning model trained on clinical data.
-            It is intended to support — not replace — clinical judgment. Always interpret results
-            in the context of the full clinical picture.
-        </div>
-        """, unsafe_allow_html=True)
+        for col, val, lbl in metrics:
+            with col:
+                st.markdown(
+                    f"""
+                    <div class="metric-box">
+                        <div class="value">{val}</div>
+                        <div class="label">{lbl}</div>
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
+
+        st.markdown(
+            """
+            <div class="info-box">
+                ℹ️ This prediction is generated by a machine learning model trained on clinical data.
+                It is intended to support — not replace — clinical judgment. Always interpret results
+                in the context of the full clinical picture.
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
