@@ -1,10 +1,8 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import requests
 import joblib
 import json
-import tempfile
 import os
 
 # =============================================================================
@@ -104,55 +102,43 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # =============================================================================
-# URLs — replace with your actual GitHub raw URLs
+# LOCAL FILE PATHS
+# Files must be in the same folder as app.py
 # =============================================================================
 
-MODEL_URL     = "https://raw.githubusercontent.com/YOUR_USER/YOUR_REPO/main/calibrated_model.joblib"
-ARTEFACTS_URL = "https://raw.githubusercontent.com/YOUR_USER/YOUR_REPO/main/model_artefacts.json"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+MODEL_PATH = os.path.join(BASE_DIR, "calibrated_model.joblib")
+ARTEFACTS_PATH = os.path.join(BASE_DIR, "model_artefacts.json")
 
 # =============================================================================
 # LOADERS
 # =============================================================================
 
 @st.cache_resource
-def load_model_from_url(url):
-    r = requests.get(url, timeout=60)
-    r.raise_for_status()
-    with tempfile.NamedTemporaryFile(suffix=".joblib", delete=False) as f:
-        f.write(r.content)
-        tmp = f.name
-    model = joblib.load(tmp)
-    os.unlink(tmp)
-    return model
+def load_model_local(path):
+    return joblib.load(path)
 
 @st.cache_data
-def load_artefacts_from_url(url):
-    r = requests.get(url, timeout=30)
-    r.raise_for_status()
-    return r.json()
+def load_artefacts_local(path):
+    with open(path, "r") as f:
+        return json.load(f)
 
 # =============================================================================
 # FEATURE DEFINITIONS
-# All 16 features from model_artefacts.json, split into:
-#   - Direct inputs  (entered by clinician as-is)
-#   - Raw inputs     (used to compute derived features)
 # =============================================================================
 
-# Direct inputs
 DIRECT_FEATURES = {
-    # Demographics
     "age": {
         "label": "Maternal Age", "type": "int",
         "min": 15, "max": 50, "default": 28, "unit": "years",
         "section": "Demographics",
     },
-    # Anthropometric
     "bmi_first_visit": {
         "label": "BMI (1st Visit)", "type": "float",
         "min": 15.0, "max": 55.0, "default": 23.0, "unit": "kg/m²",
         "section": "Anthropometric",
     },
-    # Obstetric history
     "prev_pregnancies__first_visit": {
         "label": "Previous Pregnancies", "type": "int",
         "min": 0, "max": 12, "default": 0, "unit": "",
@@ -178,7 +164,6 @@ DIRECT_FEATURES = {
         "min": 1, "max": 5, "default": 1, "unit": "",
         "section": "Obstetric History",
     },
-    # Clinical flags
     "has_comorbidity": {
         "label": "Has Comorbidity", "type": "bool",
         "default": 0, "unit": "",
@@ -206,7 +191,6 @@ DIRECT_FEATURES = {
     },
 }
 
-# Raw inputs — used only to compute derived features
 RAW_INPUTS = {
     "phq2_total__first_visit": {
         "label": "PHQ-2 Score (1st Visit)", "type": "float",
@@ -241,36 +225,57 @@ RAW_INPUTS = {
 }
 
 # =============================================================================
-# HELPER
+# HELPER FUNCTIONS
 # =============================================================================
 
 def render_input(feat, cfg, key):
     label = cfg["label"]
+
     if cfg["type"] == "bool":
-        return st.selectbox(label, options=[0, 1],
-                            format_func=lambda x: "Yes" if x else "No",
-                            index=int(cfg["default"]), key=key)
+        return st.selectbox(
+            label,
+            options=[0, 1],
+            format_func=lambda x: "Yes" if x else "No",
+            index=int(cfg["default"]),
+            key=key
+        )
+
     elif cfg["type"] == "int":
-        return st.number_input(label, min_value=int(cfg["min"]), max_value=int(cfg["max"]),
-                               value=int(cfg["default"]), step=1, key=key)
+        return st.number_input(
+            label,
+            min_value=int(cfg["min"]),
+            max_value=int(cfg["max"]),
+            value=int(cfg["default"]),
+            step=1,
+            key=key
+        )
+
     else:
-        return st.number_input(label, min_value=float(cfg["min"]), max_value=float(cfg["max"]),
-                               value=float(cfg["default"]), step=0.1, key=key)
+        return st.number_input(
+            label,
+            min_value=float(cfg["min"]),
+            max_value=float(cfg["max"]),
+            value=float(cfg["default"]),
+            step=0.1,
+            key=key
+        )
+
 
 def compute_derived(inputs):
-    age  = inputs.get("age", np.nan)
+    age = inputs.get("age", np.nan)
     phq2 = inputs.get("phq2_total__first_visit", np.nan)
-    bmi  = inputs.get("bmi_first_visit", np.nan)
-    wg   = inputs.get("weight_gain", np.nan)
-    ht1  = inputs.get("eq5d_3l_healthtoday__first_visit", np.nan)
-    ht3  = inputs.get("eq5d_3l_healthtoday__third_trimester", np.nan)
-    wx1  = inputs.get("wexner_total__first_visit", np.nan)
-    wx3  = inputs.get("wexner_total__third_trimester", np.nan)
+    bmi = inputs.get("bmi_first_visit", np.nan)
+    wg = inputs.get("weight_gain", np.nan)
+    ht1 = inputs.get("eq5d_3l_healthtoday__first_visit", np.nan)
+    ht3 = inputs.get("eq5d_3l_healthtoday__third_trimester", np.nan)
+    wx1 = inputs.get("wexner_total__first_visit", np.nan)
+    wx3 = inputs.get("wexner_total__third_trimester", np.nan)
+
     return {
-        "age_x_phq2":         age * phq2,
-        "bmi_x_weight_gain":  bmi * wg,
-        "healthtoday_change":  ht3 - ht1,
-        "wexner_change":       wx3 - wx1,
+        "age_x_phq2": age * phq2,
+        "bmi_x_weight_gain": bmi * wg,
+        "healthtoday_change": ht3 - ht1,
+        "wexner_change": wx3 - wx1,
     }
 
 # =============================================================================
@@ -288,12 +293,13 @@ with st.sidebar:
 # =============================================================================
 
 st.markdown("# 🤱 Maternity Complication Risk Predictor")
+
 st.markdown(
     "<p style='color:#6B7280;font-size:0.93rem;'>Enter patient data to generate a complication risk estimate. "
-    "The model uses two clinical thresholds: <b>Screening</b> (high sensitivity, flags 34% of patients) "
-    "and <b>High Risk</b> (high specificity, flags 5% of patients).</p>",
+    "The model uses two clinical thresholds: <b>Screening</b> and <b>High Risk</b>.</p>",
     unsafe_allow_html=True,
 )
+
 st.markdown("---")
 
 # =============================================================================
@@ -302,26 +308,30 @@ st.markdown("---")
 
 all_inputs = {}
 
-# Direct features grouped by section
 direct_sections = {}
+
 for feat, cfg in DIRECT_FEATURES.items():
     direct_sections.setdefault(cfg["section"], {})[feat] = cfg
 
 for section_name, feats in direct_sections.items():
     st.markdown(f"<div class='section-header'>{section_name}</div>", unsafe_allow_html=True)
+
     cols = st.columns(3)
+
     for idx, (feat, cfg) in enumerate(feats.items()):
         with cols[idx % 3]:
             all_inputs[feat] = render_input(feat, cfg, key=feat)
 
-# Raw inputs for derived features
 raw_sections = {}
+
 for feat, cfg in RAW_INPUTS.items():
     raw_sections.setdefault(cfg["section"], {})[feat] = cfg
 
 for section_name, feats in raw_sections.items():
     st.markdown(f"<div class='section-header'>{section_name}</div>", unsafe_allow_html=True)
+
     cols = st.columns(3)
+
     for idx, (feat, cfg) in enumerate(feats.items()):
         with cols[idx % 3]:
             all_inputs[feat] = render_input(feat, cfg, key=feat)
@@ -331,47 +341,63 @@ for section_name, feats in raw_sections.items():
 # =============================================================================
 
 st.markdown("---")
+
 btn_col, _ = st.columns([1, 2])
+
 with btn_col:
     predict_clicked = st.button("🔍 Generate Risk Prediction")
 
 if predict_clicked:
+
     with st.spinner("Loading model and computing risk..."):
+
         try:
-            model     = load_model_from_url(MODEL_URL)
-            artefacts = load_artefacts_from_url(ARTEFACTS_URL)
+            model = load_model_local(MODEL_PATH)
+            artefacts = load_artefacts_local(ARTEFACTS_PATH)
+
         except Exception as e:
-            st.error(f"❌ Failed to load model: {e}")
+            st.error(f"❌ Failed to load local files: {e}")
             st.stop()
 
-        # Build input row
-        derived  = compute_derived(all_inputs)
+        derived = compute_derived(all_inputs)
         combined = {**all_inputs, **derived}
+
         features = artefacts["features"]
-        input_df = pd.DataFrame([{f: combined.get(f, np.nan) for f in features}])
+
+        input_df = pd.DataFrame([
+            {f: combined.get(f, np.nan) for f in features}
+        ])
 
         thr_s = artefacts["thresholds"]["screening"]
         thr_h = artefacts["thresholds"]["high_risk"]
 
         try:
             prob = float(model.predict_proba(input_df)[0, 1])
+
         except Exception as e:
             st.error(f"❌ Prediction failed: {e}")
             st.stop()
 
-        # Risk tier
         if prob >= thr_h:
-            risk_level, risk_class, risk_icon = "High Risk",       "risk-high",     "🔴"
+            risk_level = "High Risk"
+            risk_class = "risk-high"
+            risk_icon = "🔴"
             risk_msg = "Patient exceeds the high-risk threshold. Immediate clinical review is recommended."
+
         elif prob >= thr_s:
-            risk_level, risk_class, risk_icon = "Screening Flag",  "risk-moderate", "🟡"
+            risk_level = "Screening Flag"
+            risk_class = "risk-moderate"
+            risk_icon = "🟡"
             risk_msg = "Patient exceeds the screening threshold. Closer follow-up and additional assessment are advised."
+
         else:
-            risk_level, risk_class, risk_icon = "Low Risk",        "risk-low",      "🟢"
+            risk_level = "Low Risk"
+            risk_class = "risk-low"
+            risk_icon = "🟢"
             risk_msg = "Patient is below the screening threshold. Continue standard monitoring."
 
-        # Risk card
         st.markdown("### 📊 Prediction Results")
+
         st.markdown(f"""
         <div class='risk-card {risk_class}'>
             <div style='font-size:1.7rem;font-weight:700;font-family:DM Serif Display,serif;'>
@@ -384,30 +410,39 @@ if predict_clicked:
         </div>
         """, unsafe_allow_html=True)
 
-        # Metric boxes
         c1, c2, c3, c4 = st.columns(4)
+
         for col, val, lbl in [
-            (c1, f"{prob:.3f}",    "Predicted Probability"),
-            (c2, risk_level,       "Risk Tier"),
-            (c3, f"{thr_s:.3f}",  "Screening Threshold"),
-            (c4, f"{thr_h:.3f}",  "High-Risk Threshold"),
+            (c1, f"{prob:.3f}", "Predicted Probability"),
+            (c2, risk_level, "Risk Tier"),
+            (c3, f"{thr_s:.3f}", "Screening Threshold"),
+            (c4, f"{thr_h:.3f}", "High-Risk Threshold"),
         ]:
             with col:
                 st.markdown(f"""
                 <div class='metric-box'>
                     <div class='value'>{val}</div>
                     <div class='label'>{lbl}</div>
-                </div>""", unsafe_allow_html=True)
+                </div>
+                """, unsafe_allow_html=True)
 
-        # Threshold performance table
         tier_m = artefacts.get("tier_metrics", {})
+
         if tier_m:
             st.markdown("<br>", unsafe_allow_html=True)
             st.markdown("#### Threshold Performance Reference")
+
             st.markdown(f"""
             <table class='tier-table'>
                 <thead>
-                    <tr><th>Tier</th><th>Threshold</th><th>Recall</th><th>Precision</th><th>F2</th><th>Alert Rate</th></tr>
+                    <tr>
+                        <th>Tier</th>
+                        <th>Threshold</th>
+                        <th>Recall</th>
+                        <th>Precision</th>
+                        <th>F2</th>
+                        <th>Alert Rate</th>
+                    </tr>
                 </thead>
                 <tbody>
                     <tr>
